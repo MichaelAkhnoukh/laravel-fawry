@@ -1,0 +1,35 @@
+{
+    "name": "caishni/fawry",
+    "description": "Integrate Fawry APIs into laravel apps",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "MichaelAkhnoukh",
+            "email": "eng.michaelakhnoukh@gmail.com"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^5.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Caishni\\Fawry\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Caishni\\Fawry\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": "Caishni\\Fawry\\FawryServiceProvider"
+        },
+        "aliases": {
+            "FawryPay": "Caishni\\Fawry\\Facades\\FawryPay"
+        }
+    }
+}
