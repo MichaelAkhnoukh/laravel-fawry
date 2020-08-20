@@ -5,7 +5,7 @@ namespace Caishni\Fawry\Tests;
 use Caishni\Fawry\FawryServiceProvider;
 use Illuminate\Database\Schema\Blueprint;
 
-class TestCase extends \Orchestra\Testbench\TestCase
+abstract class TestCase extends \Orchestra\Testbench\TestCase
 {
     protected $testUser;
 
@@ -36,6 +36,8 @@ class TestCase extends \Orchestra\Testbench\TestCase
             'database' => ':memory:',
             'prefix'   => '',
         ]);
+
+        $app['config']->set('auth.providers.users.model', User::class);
     }
 
     protected function setUpDatabase($app)
@@ -46,6 +48,15 @@ class TestCase extends \Orchestra\Testbench\TestCase
             $table->string('phone');
         });
 
+        $app['db']->connection()->getSchemaBuilder()->create('payments', function (Blueprint $table) {
+            $table->increments('id');
+            $table->decimal('amount');
+        });
+
         User::create(['email' => 'test@user.com', 'phone' => '01208702602']);
+
+        include_once __DIR__ . '/../database/migrations/create_user_cards_table.php.stub';
+
+        (new \CreateUserCardsTable)->up();
     }
 }

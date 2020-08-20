@@ -14,12 +14,10 @@ return [
 
     'endpoints' => [
         'card_tokenization' => [
-            'method' => 'POST',
             'uri' => 'cards/cardToken',
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json'
-            ]
+        ],
+        'card_payment' => [
+            'uri' => 'payments/charge',
         ]
-    ]
+    ],
 ];
