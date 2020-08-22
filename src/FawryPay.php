@@ -149,7 +149,8 @@ class FawryPay
 
     public function payAtFawry($user, Collection $items, string $referenceNumber, string $description, $paymentExpiry)
     {
-        $signature = hash('sha256', $this->merchantCode . $referenceNumber . $user->id . FawryPay::PAYATFAWRY . $items->mapIntoItems()->sum('price') . $this->securityKey);
+        $price = number_format($items->mapIntoItems()->sum('price'), 2, '.', '');
+        $signature = hash('sha256', $this->merchantCode . $referenceNumber . $user->id . FawryPay::PAYATFAWRY . $price . $this->securityKey);
 
         $client = $this->httpClient->post(
             $this->endpoints['card_payment']['uri'], [
