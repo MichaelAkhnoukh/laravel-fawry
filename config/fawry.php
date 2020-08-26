@@ -18,6 +18,9 @@ return [
         ],
         'card_payment' => [
             'uri' => 'payments/charge',
+        ],
+        'payment_status' => [
+            'uri' => 'payments/status',
         ]
     ],
 ];

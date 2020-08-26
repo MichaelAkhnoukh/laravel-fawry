@@ -3,11 +3,8 @@
 namespace Caishni\Fawry;
 
 use Caishni\Fawry\Exceptions\CardTokenException;
-use Caishni\Fawry\Http\Middleware\DecodeQuery;
 use Caishni\Fawry\Models\UserCard;
-use GuzzleHttp\Client;
 use GuzzleHttp\Middleware;
-use Illuminate\Http\Client\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Psr\Http\Message\RequestInterface;
@@ -22,6 +19,12 @@ class FawryPay
 
     const PAYATFAWRY = 'PAYATFAWRY';
     const CARD = 'CARD';
+    const UNPAID = 'UNPAID';
+    const PAID = 'PAID';
+    const CANCELLED = 'CANCELLED';
+    const REFUNDED = 'REFUNDED';
+    const EXPIRED = 'EXPIRED';
+    const FAILED = 'FAILED';
 
     public function __construct(array $config)
     {
@@ -169,5 +172,18 @@ class FawryPay
         ]);
 
         return $client->object();
+    }
+
+    public function getPaymentStatus($referenceNumber)
+    {
+        $signature = hash('sha256', $this->merchantCode . $referenceNumber . $this->securityKey);
+        return $this->httpClient->withMiddleware(Middleware::mapRequest(function (RequestInterface $request) use ($referenceNumber, $signature) {
+            $uri = Uri::withQueryValues($request->getUri(), [
+                'merchantCode' => $this->merchantCode,
+                "merchantRefNumber" => $referenceNumber,
+                "signature" => $signature,
+            ]);
+            return $request->withUri($uri);
+        }))->get($this->endpoints['payment_status']['uri'])->object();
     }
 }
