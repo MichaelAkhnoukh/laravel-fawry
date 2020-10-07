@@ -186,4 +186,18 @@ class FawryPay
             return $request->withUri($uri);
         }))->get($this->endpoints['payment_status']['uri'])->object();
     }
+
+    public function checkCallbackSignature(array $data)
+    {
+        $paymentAmount = number_format($data['paymentAmount'], 2, '.', '');
+        $orderAmount = number_format($data['orderAmount'], 2, '.', '');
+        $hash = hash('sha256', $data['fawryRefNumber'] . $data['merchantRefNum'] . $paymentAmount . $orderAmount . $data['orderStatus'] . $data['paymentMethod'] . $data['paymentRefrenceNumber'] ?? null . $this->securityKey);
+        $messageSignature = $data['messageSignature'];
+
+        if ($hash === $messageSignature) {
+            return true;
+        }
+
+        return false;
+    }
 }
