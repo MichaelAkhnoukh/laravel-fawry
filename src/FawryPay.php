@@ -191,7 +191,7 @@ class FawryPay
     {
         $paymentAmount = number_format($data['paymentAmount'], 2, '.', '');
         $orderAmount = number_format($data['orderAmount'], 2, '.', '');
-        $hash = hash('sha256', $data['fawryRefNumber'] . $data['merchantRefNumber'] . $paymentAmount . $orderAmount . $data['orderStatus'] . $data['paymentMethod'] . $data['paymentRefrenceNumber'] ?? null . $this->securityKey);
+        $hash = hash('sha256', $data['fawryRefNumber'] . $data['merchantRefNumber'] . $paymentAmount . $orderAmount . $data['orderStatus'] . $data['paymentMethod'] . ($data['paymentRefrenceNumber'] ?? null) . $this->securityKey);
         $messageSignature = $data['messageSignature'];
 
         if ($hash === $messageSignature) {
